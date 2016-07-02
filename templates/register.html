@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script src="{{url_for('static', filename='bootstrap/jquery.min.js')}}"></script>
-    <script src="{{url_for('static', filename='bootstrap/jquery-ui.min.js')}}"></script>
-    <link href="{{url_for('static', filename='bootstrap/bootstrap-combined.min.css')}}" rel="stylesheet" media="screen">
-    <script src="{{url_for('static', filename='bootstrap/bootstrap.min.js')}}"></script>
+    <script src="{{ url_for('static', filename='bootstrap/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='bootstrap/jquery-ui.min.js') }}"></script>
+    <link href="{{ url_for('static', filename='bootstrap/bootstrap-combined.min.css') }}" rel="stylesheet"
+          media="screen">
+    <script src="{{ url_for('static', filename='bootstrap/bootstrap.min.js') }}"></script>
     <script>
-        var username, password;
         $(document).ready(function () {
             $('#username').blur(function () {
-                username = $('#username').val();
+                var username = $('#username').val();
                 account = {
                     username: username
                 };
@@ -18,18 +18,18 @@
                 request = {
                     url: '/register/username',
                     type: 'post',
-                    contentType:'application/json',
+                    contentType: 'application/json',
                     data: postData,
                     success: function (data) {
-                        var r = JSON.parse(data)
-                        console.log('处理成功, ', r)
+                        var r = JSON.parse(data);
+                        console.log('处理成功, ', r);
                         $('#id-p-userinfo').text(r.result)
                     }
                 };
                 $.ajax(request);
             });
             $('#password').blur(function () {
-                password = $('#password').val();
+                var password = $('#password').val();
                 account = {
                     password: password
                 };
@@ -38,16 +38,43 @@
                 request = {
                     url: '/register/password',
                     type: 'post',
-                    contentType:'application/json',
+                    contentType: 'application/json',
                     data: postData,
                     success: function (data) {
-                        var r = JSON.parse(data)
-                        console.log('处理成功, ', r)
+                        var r = JSON.parse(data);
+                        console.log('处理成功, ', r);
                         $('#id-p-pwdinfo').text(r.result)
                     }
                 };
                 $.ajax(request);
             });
+            $('#id-btn-submit').click(function () {
+                var username, password, note, sex;
+                username = $('#username').val();
+                password = $('#password').val();
+                note = $('#note').val();
+                sex = $("input[type='radio']:checked").val();
+                account = {
+                    username : username,
+                    password : password,
+                    note : note,
+                    sex : sex
+                }
+                var postData = JSON.stringify(account);
+                console.log('json数据是, ', postData);
+                request = {
+                    url: '/register',
+                    type: 'post',
+                    contentType: 'application/json',
+                    data: postData,
+                    success: function (data) {
+                        var r = JSON.parse(data);
+                        console.log('处理结果, ', r);
+                        $('#id-p-subinfo').text(r.result)
+                    }
+                };
+                $.ajax(request)
+            })
         });
     </script>
     <meta charset="UTF-8">
@@ -55,50 +82,51 @@
 </head>
 <body>
 <div class="container-fluid">
-	<div class="row-fluid">
-		<div class="span3">
-		</div>
-		<div class="span6" style="text-align:center">
+    <div class="row-fluid">
+        <div class="span3">
+        </div>
+        <div class="span6" style="text-align:center">
             <h1>注册</h1><br><br><br>
-			<form class="form-horizontal" action="/register" method="post">
-				<div class="control-group">
-					<label class="control-label" for="username">用户名</label>
-					<div class="controls">
-                        <input id="username" name="username" type="text" /><p id="id-p-userinfo"></p>
-					</div>
-				</div>
-				<div class="control-group">
-					<label class="control-label" for="password">密码</label>
-					<div class="controls">
-						<input id="password" name="password" type="text" placeholder="3位以上密码"/><p id="id-p-pwdinfo"></p>
-					</div>
-				</div>
-				<div class="control-group">
-					<label class="control-label" for="note">个性签名</label>
-					<div class="controls">
-						<input id="note" name="note" type="text" />
+                <div class="control-group">
+                    <label class="control-label" for="username">用户名</label>
+                    <div class="controls">
+                        <input id="username" name="username" type="text"/>
+                        <p id="id-p-userinfo"></p>
+                    </div>
                 </div>
-				</div>
+                <div class="control-group">
+                    <label class="control-label" for="password">密码</label>
+                    <div class="controls">
+                        <input id="password" name="password" type="text" placeholder="3位以上密码"/>
+                        <p id="id-p-pwdinfo"></p>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="note">个性签名</label>
+                    <div class="controls">
+                        <input id="note" name="note" type="text"/>
+                    </div>
+                </div>
                 <div class="control-group">
                     <label class="checkbox-inline">
                         <input type="radio" name="sex" id="optionsRadios3" value="male" checked> male
                         <input type="radio" name="sex" id="optionsRadios4" value="female"> female
                     </label>
-				</div>
-				<div class="control-group">
-					<div class="controls">
-						<button type="submit" class="btn">注册</button>
-					</div>
-				</div>
-			</form>
+                </div>
+                <div class="control-group">
+                    <div class="controls">
+                        <button type="submit" class="btn" id="id-btn-submit">注册</button>
+                        <p id="id-p-subinfo"></p>
+                    </div>
+                </div>
             <h3><a href="/login">登录</a></h3>
             {% for m in get_flashed_messages() %}
                 <h4 style="text-align:center">{{ m }}</h4>
-			{% endfor %}
-		</div>
-		<div class="span3">
-		</div>
-	</div>
+            {% endfor %}
+        </div>
+        <div class="span3">
+        </div>
+    </div>
 </div>
 </body>
 </html>

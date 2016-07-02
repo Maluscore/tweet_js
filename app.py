@@ -108,17 +108,24 @@ def register_view():
 # 处理注册的请求  POST
 @app.route('/register', methods=['POST'])
 def register():
-    u = User(request.form)
+    d = request.get_json()
+    form = d
+    print('form, ', form)
+    u = User(form)
+    status = {
+        'result': ''
+    }
     if u.valid():
         log("用户注册成功")
         # 保存到数据库
         u.save()
         session['user_id'] = u.id
-        return redirect(url_for('timeline_view', username=u.username))
+        status['result'] = '用户注册成功'
     else:
         log('注册失败', request.form)
-        flash('注册失败')
-        return redirect(url_for('register_view'))
+        status['result'] = '用户注册失败'
+    r = json.dumps(status, ensure_ascii=False)
+    return r
 
 
 # ajax验证用户名 POST
