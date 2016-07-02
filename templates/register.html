@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script type="text/javascript" src="{{url_for('static', filename='bootstrap/jquery-2.0.0.min.js')}}"></script>
+    <script type="text/javascript" src="{{url_for('static', filename='bootstrap/jquery-ui.min.js')}}"></script>
+    <link href="{{url_for('static', filename='bootstrap/bootstrap-combined.min.css')}}" rel="stylesheet" media="screen">
+    <script type="text/javascript" src="{{url_for('static', filename='bootstrap/bootstrap.min.js')}}"></script>
+    <meta charset="UTF-8">
+    <title>注册</title>
+</head>
+<body>
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span3">
+		</div>
+		<div class="span6" style="text-align:center">
+            <h1>注册</h1><br><br><br>
+			<form class="form-horizontal" action="/register" method="post">
+				<div class="control-group">
+					<label class="control-label" for="username">用户名</label>
+					<div class="controls">
+                        <input id="username" name="username" type="text" />
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="password">密码</label>
+					<div class="controls">
+						<input id="password" name="password" type="text" placeholder="3位以上密码"/>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="note">个性签名</label>
+					<div class="controls">
+						<input id="note" name="note" type="text" />
+                </div>
+				</div>
+                <div class="control-group">
+                    <label class="checkbox-inline">
+                        <input type="radio" name="sex" id="optionsRadios3" value="male" checked> male
+                        <input type="radio" name="sex" id="optionsRadios4" value="female"> female
+                    </label>
+				</div>
+				<div class="control-group">
+					<div class="controls">
+						<button type="submit" class="btn">注册</button>
+					</div>
+				</div>
+			</form>
+            <h3><a href="/login">登录</a></h3>
+            {% for m in get_flashed_messages() %}
+                <h4 style="text-align:center">{{ m }}</h4>
+			{% endfor %}
+		</div>
+		<div class="span3">
+		</div>
+	</div>
+</div>
+</body>
+</html>

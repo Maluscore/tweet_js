@@ -1,0 +1,1 @@
+使用Javascript进行处理，采用jQuery库，ajax

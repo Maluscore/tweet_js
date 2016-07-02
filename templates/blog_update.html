@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>编辑博客</title>
+    <script type="text/javascript" src="{{url_for('static', filename='bootstrap/jquery-2.0.0.min.js')}}"></script>
+    <script type="text/javascript" src="{{url_for('static', filename='bootstrap/jquery-ui.min.js')}}"></script>
+    <link href="{{url_for('static', filename='bootstrap/bootstrap-combined.min.css')}}" rel="stylesheet" media="screen">
+    <script type="text/javascript" src="{{url_for('static', filename='bootstrap/bootstrap.min.js')}}"></script>
+</head>
+<body>
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span12">
+			<div class="navbar">
+				<div class="navbar-inner">
+					<div class="container-fluid">
+						 <a data-target=".navbar-responsive-collapse" data-toggle="collapse" class="btn btn-navbar"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a> <a href="#" class="brand">人民公社博客</a>
+						<div class="nav-collapse collapse navbar-responsive-collapse">
+							<ul class="nav">
+								<li>
+									<a href="/timeline/{{user_now.username}}">个人主页</a>
+								</li>
+								<li>
+									<a href="/users/list">用户列表</a>
+								</li>
+								<li>
+									<a href="/blog/add">发表</a>
+								</li>
+								<li>
+									<a href="/logout">注销</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row-fluid">
+		<div class="span2">
+		</div>
+		<div class="span3">
+			<h3>用户信息</h3>
+			<ul>
+				<li>
+					<b>用户名：</b>{{user_now.username}}
+				</li>
+				<li>
+					<b>性别：</b>{{user_now.sex}}
+				</li>
+				<li>
+					<b>个性签名：</b>{{user_now.note}}
+				</li>
+				<li>
+					<b>当前身份：</b>
+                    {% if user_now.role == 1 %}管理员{% endif %}
+                    {% if user_now.role == 2 %}普通会员{% endif %}
+				</li>
+			</ul>
+		</div>
+		<div class="span5">
+			<h2>编辑博客</h2>
+			<form action="/blog/update/{{blog.id}}" method="post">
+            <fieldset style="text-align:center">
+            <legend contenteditable="true"></legend>
+            <input name="title" type="text" placeholder="{{blog.title}}" required="required">
+				<br>
+			<textarea name="content" class="form-control" required="required" rows="5">{{blog.content}}</textarea>
+			<br>
+            <button type="submit" class="btn">提交</button>
+            </fieldset>
+            </form>
+		</div>
+		<div class="span2">
+		</div>
+	</div>
+</div>
+</body>
+</html>
