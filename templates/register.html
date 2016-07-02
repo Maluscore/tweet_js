@@ -14,7 +14,7 @@
                     username: username
                 };
                 var postData = JSON.stringify(account);
-                console.log('ison数据是, ', postData);
+                console.log('json数据是, ', postData);
                 request = {
                     url: '/register/username',
                     type: 'post',
@@ -25,10 +25,30 @@
                         console.log('处理成功, ', r)
                         $('#id-p-userinfo').text(r.result)
                     }
-                }
-                $.ajax(request)
-            })
-        })
+                };
+                $.ajax(request);
+            });
+            $('#password').blur(function () {
+                password = $('#password').val();
+                account = {
+                    password: password
+                };
+                var postData = JSON.stringify(account);
+                console.log('json数据是, ', postData);
+                request = {
+                    url: '/register/password',
+                    type: 'post',
+                    contentType:'application/json',
+                    data: postData,
+                    success: function (data) {
+                        var r = JSON.parse(data)
+                        console.log('处理成功, ', r)
+                        $('#id-p-pwdinfo').text(r.result)
+                    }
+                };
+                $.ajax(request);
+            });
+        });
     </script>
     <meta charset="UTF-8">
     <title>注册</title>
@@ -50,7 +70,7 @@
 				<div class="control-group">
 					<label class="control-label" for="password">密码</label>
 					<div class="controls">
-						<input id="password" name="password" type="text" placeholder="3位以上密码"/>
+						<input id="password" name="password" type="text" placeholder="3位以上密码"/><p id="id-p-pwdinfo"></p>
 					</div>
 				</div>
 				<div class="control-group">

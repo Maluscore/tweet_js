@@ -144,6 +144,25 @@ def username_analyze():
     return r
 
 
+# ajax验证密码 POST
+@app.route('/register/password', methods=['POST'])
+def password_analyze():
+    d = request.get_json()
+    form = d
+    print('form', form)
+    password = form.get('password', '')
+    status = {
+        'result': '',
+    }
+    if password == '':
+        status['result'] = '请输入密码'
+    else:
+        status['result'] = '密码输入成功'
+    r = json.dumps(status, ensure_ascii=False)
+    print('r, ', r)
+    return r
+
+
 # 显示某个用户的主页  GET
 @app.route('/timeline/<username>')
 @requires_login
