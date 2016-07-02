@@ -14,6 +14,8 @@ from models import Blog
 from models import Comment
 from models import Follow
 
+import json
+
 app = Flask(__name__)
 app.secret_key = 'peng'
 admin = 1
@@ -56,6 +58,7 @@ def requires_login(f):
         if current_user() is None:
             return redirect(url_for('login_view'))
         return f(*args, **kwargs)
+
     return wrapped
 
 
@@ -116,6 +119,29 @@ def register():
         log('注册失败', request.form)
         flash('注册失败')
         return redirect(url_for('register_view'))
+
+
+# ajax验证用户名 POST
+@app.route('/register/username', methods=['POST'])
+def username_analyze():
+    d = request.get_json()
+    form = d
+    print('form', form)
+    username = form.get('username', '')
+    all_users = User.query.all()
+    all_names = [x.username for x in all_users]
+    status = {
+        'result': '',
+    }
+    if username in all_names:
+        status['result'] = '用户名重复'
+    elif username == '':
+        status['result'] = '请输入用户名'
+    else:
+        status['result'] = '可以使用的用户名'
+    r = json.dumps(status, ensure_ascii=False)
+    print('r, ', r)
+    return r
 
 
 # 显示某个用户的主页  GET

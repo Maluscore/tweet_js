@@ -1,10 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script type="text/javascript" src="{{url_for('static', filename='bootstrap/jquery-2.0.0.min.js')}}"></script>
-    <script type="text/javascript" src="{{url_for('static', filename='bootstrap/jquery-ui.min.js')}}"></script>
+    <script src="{{url_for('static', filename='bootstrap/jquery.min.js')}}"></script>
+    <script src="{{url_for('static', filename='bootstrap/jquery-ui.min.js')}}"></script>
     <link href="{{url_for('static', filename='bootstrap/bootstrap-combined.min.css')}}" rel="stylesheet" media="screen">
-    <script type="text/javascript" src="{{url_for('static', filename='bootstrap/bootstrap.min.js')}}"></script>
+    <script src="{{url_for('static', filename='bootstrap/bootstrap.min.js')}}"></script>
+    <script>
+        var username, password;
+        $(document).ready(function () {
+            $('#username').blur(function () {
+                username = $('#username').val();
+                account = {
+                    username: username
+                };
+                var postData = JSON.stringify(account);
+                console.log('ison数据是, ', postData);
+                request = {
+                    url: '/register/username',
+                    type: 'post',
+                    contentType:'application/json',
+                    data: postData,
+                    success: function (data) {
+                        var r = JSON.parse(data)
+                        console.log('处理成功, ', r)
+                        $('#id-p-userinfo').text(r.result)
+                    }
+                }
+                $.ajax(request)
+            })
+        })
+    </script>
     <meta charset="UTF-8">
     <title>注册</title>
 </head>
@@ -19,7 +44,7 @@
 				<div class="control-group">
 					<label class="control-label" for="username">用户名</label>
 					<div class="controls">
-                        <input id="username" name="username" type="text" />
+                        <input id="username" name="username" type="text" /><p id="id-p-userinfo"></p>
 					</div>
 				</div>
 				<div class="control-group">
