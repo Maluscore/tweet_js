@@ -4,7 +4,6 @@ from flask import redirect
 from flask import url_for
 from flask import request
 from flask import abort
-from flask import flash
 from flask import session
 from my_log import log
 from functools import wraps
@@ -78,18 +77,28 @@ def login_view():
 # 处理登录请求  POST
 @app.route('/login', methods=['POST'])
 def login():
-    u = User(request.form)
+    form = request.get_json()
+    if isinstance(form, str):
+        print('form, ', form)
+    else:
+        print('form不是一个str， ', form)
+    u = User(form)
     user = User.query.filter_by(username=u.username).first()
     log(user)
+    status = {
+        'success': True,
+        'url': '/timeline/{}'.format(u.username),
+        'message': '登录成功',
+    }
     if u.validate(user):
         log("用户登录成功")
         session['user_id'] = user.id
-        r = redirect(url_for('timeline_view', username=user.username))
-        return r
     else:
         log("用户登录失败", user)
-        flash('登录失败')
-        return redirect(url_for('login_view'))
+        status['success'] = False
+        status['message'] = '登录失败'
+    r = json.dumps(status, ensure_ascii=False)
+    return r
 
 
 # 处理登出的请求 GET

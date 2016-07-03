@@ -1,10 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script type="text/javascript" src="{{url_for('static', filename='bootstrap/jquery-2.0.0.min.js')}}"></script>
+    <script type="text/javascript" src="{{url_for('static', filename='bootstrap/jquery.min.js')}}"></script>
     <script type="text/javascript" src="{{url_for('static', filename='bootstrap/jquery-ui.min.js')}}"></script>
     <link href="{{url_for('static', filename='bootstrap/bootstrap-combined.min.css')}}" rel="stylesheet" media="screen">
     <script type="text/javascript" src="{{url_for('static', filename='bootstrap/bootstrap.min.js')}}"></script>
+    <script>
+        $(document).ready(function () {
+            $('button').on('click', function () {
+                var username = $('#username').val();
+                var password = $('#password').val();
+                var account = {
+                    username: username,
+                    password: password
+                };
+                var postData = JSON.stringify(account);
+                console.log('json的数据格式是： ', postData);
+                var request = {
+                    url: '/login',
+                    type: 'post',
+                    contentType: 'application/json',
+                    data: postData,
+                    success: function (data) {
+                        var r = JSON.parse(data);
+                        console.log('返回的是： ', r);
+                        if (r.success){
+                            console.log(r.message);
+                            window.location.href = r.url;
+                        }else {
+                            console.log(r.message);
+                            $('#id-p-loginfo').text(r.message);
+                        }
+                    }
+                };
+                $.ajax(request);
+            });
+        });
+    </script>
     <meta charset="UTF-8">
     <title>登录</title>
 </head>
@@ -15,26 +47,24 @@
 		</div>
 		<div class="span6"  style="text-align:center">
 			<h1>人民公社</h1>
-			<form class="form-horizontal" action="/login" method="post">
-				<div class="control-group">
-					 <br><br><br><label class="control-label" for="username">用户名</label>
-					<div class="controls">
-						<input id="username" name="username" type="text" />
-					</div>
-				</div>
-				<div class="control-group">
-					 <label class="control-label" for="password">密码</label>
-					<div class="controls">
-						<input id="password" name="password" type="password" />
-					</div>
-				</div>
-				<div class="control-group">
-					<div class="controls">
-						<button type="submit" class="btn">登录</button>
-					</div>
-				</div>
-			</form>
-			<h3><a href="/register">注册</a></h3>
+            <div class="control-group">
+                <br><br><br><label class="control-label" for="username">用户名</label>
+                <div class="controls">
+                    <input id="username" name="username" type="text" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="password">密码</label>
+                <div class="controls">
+                    <input id="password" name="password" type="password" />
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <button type="submit" class="btn">登录</button>
+                </div>
+            </div>
+			<h3><a href="/register">注册</a></h3><p id="id-p-loginfo"></p>
 			{% for m in get_flashed_messages() %}
                 <h4 style="text-align:center">{{ m }}</h4>
 			{% endfor %}
