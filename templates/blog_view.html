@@ -3,10 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <title>博客正文</title>
-    <script type="text/javascript" src="{{url_for('static', filename='bootstrap/jquery-2.0.0.min.js')}}"></script>
-    <script type="text/javascript" src="{{url_for('static', filename='bootstrap/jquery-ui.min.js')}}"></script>
+    <script src="{{url_for('static', filename='bootstrap/jquery.min.js')}}"></script>
+    <script src="{{url_for('static', filename='bootstrap/jquery-ui.min.js')}}"></script>
     <link href="{{url_for('static', filename='bootstrap/bootstrap-combined.min.css')}}" rel="stylesheet" media="screen">
-    <script type="text/javascript" src="{{url_for('static', filename='bootstrap/bootstrap.min.js')}}"></script>
+    <script src="{{url_for('static', filename='bootstrap/bootstrap.min.js')}}"></script>
+    <script>
+        $(document).ready(function () {
+            $("#id-btn-comment").click(function () {
+                var content, blog_id;
+                content = $("#comment").val();
+                blog_id = {{ blog.id }};
+                console.log('click');
+                var com = {
+                    content: content,
+                    blog_id: blog_id
+                };
+                var postData = JSON.stringify(com);
+                console.log('json的数据格式是， ', postData);
+                shit = {a: 'b'};
+                mm = JSON.stringify(shit);
+                console.log('shit, ', shit,'mm, ', mm)
+                var request = {
+                    url: '/comment/add',
+                    type: 'post',
+                    contentType: "application/json",
+                    data: postData,
+                    success: function (data) {
+                        console.log('r, ', data);
+                        var r = JSON.parse(data);
+                        console.log('r, ', r);
+                        var commentHtml = (
+                                `<li>${r.content} <a href="/reply/add" style="float:right">回复</a>
+                                 <p style="text-align:right">评论人：${r.sender_name}&#8194&#8194发布时间：${r.release_time}</p>
+                                 </li><hr><hr>
+                                 `
+                        );
+                        $("#id-ul-comment").prepend(commentHtml)
+                    }
+                };
+                $.ajax(request)
+            });
+        });
+    </script>
 </head>
 <body>
 <div class="container-fluid">
@@ -77,18 +115,16 @@
 		<div class="span5">
             <hr>
 			{% if user_now.id == blog.user_id %}
-			<abbr style="float:right"> <a href="/blog/update/{{blog.id}}" style="text-decoretion:none;float=right">编辑</a>
-			<a href="/blog/delete/{{blog.id}}" style="text-decoretion:none;float=right">删除</a></abbr>
+			<abbr style="float:right"> <a href="/blog/update/{{blog.id}}" style="text-decoration:none;float:right">编辑</a>
+			<a href="/blog/delete/{{blog.id}}" style="text-decoration:none;float:right">删除</a></abbr>
 			{% endif %}
-            <form role="form" action="/comment/add/{{blog.id}}" method="post">
-				<div class="form-group">
+			<div class="form-group">
                 <label for="comment"></label>
                 <input type="text" class="form-control" id="comment" name="content" placeholder="评论内容" required="required">
-				</div>
-                <button type="submit" class="btn btn-default">提交</button>
-            </form>
+			</div>
+            <button type="submit" class="btn btn-default" id="id-btn-comment">提交</button>
             <h3 style="text-align:left">评论列表</h3>
-            <ul>
+            <ul id="id-ul-comment">
                 {% for bc in blog_comments %}
                 <li>
                     {{bc.content}}

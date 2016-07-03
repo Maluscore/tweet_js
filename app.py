@@ -241,11 +241,15 @@ def blog_add():
 
 
 # 处理 发送 评论的函数  POST
-@app.route('/comment/add/<blog_id>', methods=['POST'])
+@app.route('/comment/add', methods=['POST'])
 @requires_login
-def comment_add(blog_id):
+def comment_add():
+    log('发送评论')
     user_now = current_user()
-    c = Comment(request.form)
+    form = request.get_json()
+    print('form, ', form)
+    c = Comment(form)
+    blog_id = form.get('blog_id', '')
     # 设置是谁发的
     c.sender_name = user_now.username
     c.blog = Blog.query.filter_by(id=blog_id).first()
@@ -255,7 +259,15 @@ def comment_add(blog_id):
     blog.com_count = len(Comment.query.filter_by(blog_id=blog.id).all())
     blog.save()
     log('写评论')
-    return redirect(url_for('blog_view', blog_id=blog_id))
+    status = {
+        'content': c.content,
+        'sender_name': c.sender_name,
+        'release_time': c.release_time,
+        'id': c.id,
+    }
+    r = json.dumps(status, ensure_ascii=False)
+    print('r, ', r)
+    return r
 
 
 # 显示 用户列表 的界面 GET

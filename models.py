@@ -44,8 +44,7 @@ class User(db.Model):
     role = db.Column(db.Integer, default=2)
     follow_count = db.Column(db.Integer, default=0)
     fan_count = db.Column(db.Integer, default=0)
-    created_time = db.Column(db.DateTime(timezone=True), default=sql.func.now())
-    release_time = db.Column(db.String(), default=local_time(time.time()))
+    created_time = db.Column(db.INTEGER, default=0)
     # 这是引用别的表的数据的属性，表明了它关联的东西
     blogs = db.relationship('Blog', backref='user')
 
@@ -55,6 +54,7 @@ class User(db.Model):
         self.password = convert_to_sha1(form.get('password', ''))
         self.sex = form.get('sex', '')
         self.note = form.get('note', '')
+        self.created_time = int(time.time())
 
     def __repr__(self):
         class_name = self.__class__.__name__
@@ -105,8 +105,7 @@ class Blog(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String())
     content = db.Column(db.String())
-    created_time = db.Column(db.DateTime(timezone=True), default=sql.func.now())
-    release_time = db.Column(db.String(), default=local_time(time.time()))
+    created_time = db.Column(db.INTEGER, default=0)
     com_count = db.Column(db.Integer, default=0)
     # 这是一个外键
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
@@ -115,6 +114,7 @@ class Blog(db.Model):
     def __init__(self, form):
         self.title = form.get('title', '')
         self.content = form.get('content', '')
+        self.created_time = int(time.time())
 
     def __repr__(self):
         class_name = self.__class__.__name__
@@ -140,8 +140,7 @@ class Comment(db.Model):
     __tablename__ = 'comments'
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.String())
-    created_time = db.Column(db.DateTime(timezone=True), default=sql.func.now())
-    release_time = db.Column(db.String(), default=local_time(time.time()))
+    created_time = db.Column(db.INTEGER, default=0)
     sender_name = db.Column(db.String())
     reply_id = db.Column(db.Integer, default=0)
     blog_id = db.Column(db.Integer, db.ForeignKey('blogs.id'))
@@ -167,12 +166,13 @@ class Follow(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     followed_id = db.Column(db.Integer)
-    created_time = db.Column(db.DateTime(timezone=True), default=sql.func.now())
-    release_time = db.Column(db.String(), default=local_time(time.time()))
+    created_time = db.Column(db.Integer, default=0)
     # 关注了哪些用户，配合user_id使用
     follows = db.relationship('User')
     # 有哪些粉丝，配合followed_id使用
     # fans = db.relationship('User')
+    def __init__(self):
+        self.created_time = int(time.time())
 
     def __repr__(self):
         class_name = self.__class__.__name__
