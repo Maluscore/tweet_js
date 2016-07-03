@@ -19,8 +19,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///{}'.format(db_path)
 db = SQLAlchemy(app)
 
 
-def local_time(unix_time):
-    return time.strftime(r'%Y/%m/%d %H:%M:%S', time.localtime(unix_time))
+# def local_time(unix_time):
+#     return time.strftime(r'%Y/%m/%d %H:%M:%S', time.localtime(unix_time))
 
 
 def convert_to_sha1(pwd):
@@ -131,8 +131,7 @@ class Blog(db.Model):
     def update(self, form):
         self.title = form.get('title', '')
         self.content = form.get('content', '')
-        self.created_time = sql.func.now()
-        self.release_time = local_time(time.time())
+        self.created_time = int(time.time())
         return True
 
 
@@ -147,6 +146,7 @@ class Comment(db.Model):
 
     def __init__(self, form):
         self.content = form.get('content', '')
+        self.created_time = int(time.time())
 
     def __repr__(self):
         class_name = self.__class__.__name__
@@ -171,6 +171,7 @@ class Follow(db.Model):
     follows = db.relationship('User')
     # 有哪些粉丝，配合followed_id使用
     # fans = db.relationship('User')
+
     def __init__(self):
         self.created_time = int(time.time())
 

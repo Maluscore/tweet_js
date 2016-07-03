@@ -13,6 +13,7 @@ from models import User
 from models import Blog
 from models import Comment
 from models import Follow
+from time_filter import formatted_time
 
 import json
 
@@ -58,7 +59,6 @@ def requires_login(f):
         if current_user() is None:
             return redirect(url_for('login_view'))
         return f(*args, **kwargs)
-
     return wrapped
 
 
@@ -262,7 +262,7 @@ def comment_add():
     status = {
         'content': c.content,
         'sender_name': c.sender_name,
-        'release_time': c.release_time,
+        'created_time': formatted_time(c.created_time),
         'id': c.id,
     }
     r = json.dumps(status, ensure_ascii=False)
