@@ -77,11 +77,12 @@ def login_view():
 # 处理登录请求  POST
 @app.route('/login', methods=['POST'])
 def login():
+    # 这里拿到的已经是一个字典了
     form = request.get_json()
-    if isinstance(form, str):
-        print('form, ', form)
-    else:
-        print('form不是一个str， ', form)
+    # if isinstance(form, dict):
+    #     print('form, ', form)
+    # else:
+    #     print('form不是一个dict， ', form)
     u = User(form)
     user = User.query.filter_by(username=u.username).first()
     log(user)
@@ -149,7 +150,7 @@ def username_analyze():
     status = {
         'result': '',
     }
-    if username in all_names:
+    if username in all_names and len(username) >= 3:
         status['result'] = '用户名重复'
     elif username == '':
         status['result'] = '请输入用户名'

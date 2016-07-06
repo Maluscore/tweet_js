@@ -32,6 +32,7 @@
                         console.log('r, ', data);
                         var r = JSON.parse(data);
                         console.log('r, ', r);
+                        //ES6语法，省去拼接字符串的麻烦
                         var commentHtml = (
                                 `<li>${r.content} <a href="/reply/add" style="float:right">回复</a>
                                  <p style="text-align:right">评论人：${r.sender_name}&#8194&#8194发布时间：${r.created_time}</p>
