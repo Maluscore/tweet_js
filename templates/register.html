@@ -10,12 +10,12 @@
         $(document).ready(function () {
             $('#username').blur(function () {
                 var username = $('#username').val();
-                account = {
+                var account = {
                     username: username
                 };
                 var postData = JSON.stringify(account);
                 console.log('json数据是, ', postData);
-                request = {
+                var request = {
                     url: '/register/username',
                     type: 'post',
                     contentType: 'application/json',
@@ -30,12 +30,12 @@
             });
             $('#password').blur(function () {
                 var password = $('#password').val();
-                account = {
+                var account = {
                     password: password
                 };
                 var postData = JSON.stringify(account);
                 console.log('json数据是, ', postData);
-                request = {
+                var request = {
                     url: '/register/password',
                     type: 'post',
                     contentType: 'application/json',
@@ -54,7 +54,7 @@
                 password = $('#password').val();
                 note = $('#note').val();
                 sex = $("input[type='radio']:checked").val();
-                account = {
+                var account = {
                     username : username,
                     password : password,
                     note : note,
@@ -62,13 +62,12 @@
                 };
                 var postData = JSON.stringify(account);
                 console.log('json数据是, ', postData);
-                request = {
+                var request = {
                     url: '/register',
                     type: 'post',
                     contentType: 'application/json',
                     data: postData,
-                    success: function (data) {
-                        var r = JSON.parse(data);
+                    success: function (r) {
                         console.log('处理结果, ', r);
                         $('#id-p-subinfo').text(r.result)
                     }

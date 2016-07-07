@@ -7,6 +7,7 @@ from flask import abort
 from flask import session
 from my_log import log
 from functools import wraps
+from flask import jsonify
 
 from models import User
 from models import Blog
@@ -122,7 +123,7 @@ def register():
     form = d
     print('form, ', form)
     u = User(form)
-    status = {
+    r = {
         'result': ''
     }
     if u.valid():
@@ -130,12 +131,11 @@ def register():
         # 保存到数据库
         u.save()
         session['user_id'] = u.id
-        status['result'] = '用户注册成功'
+        r['result'] = '用户注册成功'
     else:
         log('注册失败', request.form)
-        status['result'] = '用户注册失败'
-    r = json.dumps(status, ensure_ascii=False)
-    return r
+        r['result'] = '用户注册失败'
+    return jsonify(r)
 
 
 # ajax验证用户名 POST
